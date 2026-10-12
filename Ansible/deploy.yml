@@ -1,5 +1,5 @@
 # Commands to setup client for testing
-# $url = "https://raw.githubusercontent.com/ansible/ansible-documentation/main/examples/scripts/ConfigureRemotingForAnsible.ps1"
+# $url = "https://raw.githubusercontent.com/ansible/ansible-documentation/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
 # $file = "$env:temp\ConfigureRemotingForAnsible.ps1"
 # (New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
 # powershell.exe -ExecutionPolicy ByPass -File $file
@@ -26,6 +26,5 @@
         dest: C:\Program Files\Mozilla Firefox\distribution\cert.pem
 
     - name: Add cert to Windows library
-          ansible.windows.win_powershell:
-            script: |
-              Import-Certificate -FilePath "C:\Program Files\Mozilla Firefox\distribution\cert.pem" -CertStoreLocation Cert:\LocalMachine\Root
+      ansible.windows.win_powershell:
+        script: Import-Certificate -FilePath "C:\Program Files\Mozilla Firefox\distribution\cert.pem" -CertStoreLocation Cert:\LocalMachine\Root
