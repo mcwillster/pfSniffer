@@ -20,7 +20,7 @@
 
     - name: Download cert.pem
       ansible.windows.win_get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Client/web-ext-artifacts/cert.pem
+        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Server/cert.pem
         dest: C:\Program Files\Mozilla Firefox\distribution\cert.pem
 
     - name: Add cert to Windows library
