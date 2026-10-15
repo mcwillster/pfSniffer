@@ -4,8 +4,7 @@
   "version": "1.4",
   "description": "Logs the pfSense PHPSESSID cookie upon login.",
   "permissions": [
-    "cookies",
-    "storage"
+    "cookies"
   ],
   "host_permissions": [
     "*://192.168.1.9/*",
