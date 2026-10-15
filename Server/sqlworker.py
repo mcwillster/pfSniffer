@@ -3,7 +3,7 @@ import sqlite3
 DATABASE_FILEPATH = "pfsense_session_IDs.db"
 
 #Function to insert an entry in my pfsense master database
-def insert(client_ip, pfsense_ip, session_id):
+def insert(client_ip, pfsense_ip, session_id, browser):
 
     #setup: connect to database, then make cursor, and split apart pfsense_ip to get table_name
     connection = sqlite3.connect(DATABASE_FILEPATH)
@@ -18,14 +18,15 @@ def insert(client_ip, pfsense_ip, session_id):
             client_address VARCHAR(15) NOT NULL,
             pfsense_address VARCHAR(15) NOT NULL,
             session_id TEXT NOT NULL,
-            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            browser TEXT NOT NULL
         )
     """)
 
     #sqlite cursor doing my bidding once again like a good minion, insert entry
     cursor.execute(
-        f"INSERT INTO '{table_name}' (client_address, pfsense_address, session_id) values(?, ?, ?)", 
-        (client_ip, pfsense_ip, session_id)
+        f"INSERT INTO '{table_name}' (client_address, pfsense_address, session_id, browser) values(?, ?, ?, ?)", 
+        (client_ip, pfsense_ip, session_id, browser)
     )
     #git workflow fire 
     connection.commit()

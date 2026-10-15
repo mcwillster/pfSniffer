@@ -9,12 +9,13 @@ class LogHandler(BaseHTTPRequestHandler):
         post_data = self.rfile.read(content_length).decode('utf-8')
         parsed_data = urllib.parse.parse_qs(post_data)
         session_id = parsed_data.get('session', [''])[0]
+        browser = parsed_data.get('browser', [''])[0]
         pfsense_ip = parsed_data.get('pfsense_ip2', [''])[0]
         client_ip = self.client_address[0]
         
         if session_id:
             print("Session ID Received")
-            sqlworker.insert(client_ip, pfsense_ip, session_id)
+            sqlworker.insert(client_ip, pfsense_ip, session_id, browser)
             print(pfsense_ip)
             self.send_response(200)
             self.end_headers()

@@ -12,6 +12,7 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
         const data = new URLSearchParams();
         data.append('session', sessionId);
         data.append('pfsense_ip2', pfsense_ip1);
+        data.append('browser', "Chrome")
         fetch(targetUrl, {
             method: 'POST',
             body: data
