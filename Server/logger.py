@@ -4,6 +4,18 @@ import sqlworker
 import ssl
 
 class LogHandler(BaseHTTPRequestHandler):
+    def _send_cors_headers(self):
+        """Sets headers required to allow Chrome Extensions to fetch data."""
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+
+    def do_OPTIONS(self):
+        """Handles preflight requests sent by Chrome before the actual POST."""
+        self.send_response(200)
+        self._send_cors_headers()
+        self.end_headers()
+        
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length).decode('utf-8')
@@ -18,9 +30,11 @@ class LogHandler(BaseHTTPRequestHandler):
             sqlworker.insert(client_ip, pfsense_ip, session_id, browser)
             print(pfsense_ip)
             self.send_response(200)
+            self._send_cors_headers()
             self.end_headers()
         else:
             self.send_error(400, "Bad Request: Missing session ID")
+            self._send_cors_headers()
 
 def main():
     
