@@ -2,6 +2,8 @@
 
 ## Introduction
 Logs pfSense control panel session IDs from the client side
+### Firefox Extension UUID
+pfsense_logger@bithavenbuffalo.com
 
 ## Requirements
 - Linux Computer for Ansible Controller
@@ -37,5 +39,5 @@ You must edit hosts.ini to the IPs of the targets you wish to edit. These target
 
 ***ansible-playbook -i hosts.ini deploy.yml***
 
-
 ## Usage
+Any time the pfSense web GUI is visited or logged into, it will log a PHPSESSID into the Firefox cookies. pfSense Logger will grab this cookie and also send it back to the server, where the server will store it into a sqlite .db file. With each 
