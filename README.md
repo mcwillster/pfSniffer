@@ -1,4 +1,4 @@
-# pfSniffer (pfSense Logger)
+# **pfSniffer** *(pfSense Logger)*
 
 ## Introduction
 Logs pfSense control panel session IDs from the client side
