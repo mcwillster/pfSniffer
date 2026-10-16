@@ -1,9 +1,9 @@
-# Commands to setup client for testing
+# Commands to setup Windows for testing
 # (New-Object -TypeName System.Net.WebClient).DownloadFile("https://raw.githubusercontent.com/ansible/ansible-documentation/devel/examples/scripts/ConfigureRemotingForAnsible.ps1", "$env:temp\ConfigureRemotingForAnsible.ps1")
 # powershell.exe -ExecutionPolicy ByPass -File "$env:temp\ConfigureRemotingForAnsible.ps1"
 
 ---
-- name: Windows Setup
+- name: Windows Firefox Setup
   hosts: windows
   gather_facts: no
 
@@ -15,7 +15,7 @@
 
     - name: Download policies.json
       ansible.windows.win_get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Client/web-ext-artifacts/policies.json
+        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Client/Firefox/policies.json
         dest: C:\Program Files\Mozilla Firefox\distribution\policies.json
 
     - name: Download cert.pem

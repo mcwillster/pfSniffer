@@ -1,4 +1,4 @@
-# pfSense Logger
+# pfSniffer (pfSense Logger)
 
 ## Introduction
 Logs pfSense control panel session IDs from the client side
@@ -32,7 +32,10 @@ I used this command to generate them, it will ask a few questions about location
 ***openssl req -x509 -newkey rsa:2048 -nodes -keyout server.key -out server.crt -days 365 -subj "//CN=192.168.1.9" -addext "basicConstraints=CA:FALSE" -addext "subjectAltName=IP:192.168.1.9"***
 
 ### Step 3: Download to Server/Ansible
-Download the *Server* folder to your server, and the *Ansible* folder to your Ansible Controller. These must be different computers because as it stands, the Server must be on Windows, and the Ansible must be on Linux. I hopefully will add Linux support to server later   
+Download the *Server* folder to your server, and the *Ansible* folder to your Ansible Controller. These must be different computers because as it stands, the Server must be on Windows, and the Ansible must be on Linux. I hopefully will add Linux support to server later.
+
+Python Requests package must also be installed with:
+***pip install Requests***
 
 ### Step 4: Run Ansible
 You must edit hosts.ini to the IPs of the targets you wish to edit. These targets must all have step 1 performed on them prior to this, simply add a new line under windows with each IP. Then run this command on the Ansible controller, within the *Ansible* folder.
