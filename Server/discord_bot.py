@@ -28,7 +28,7 @@ def send_pfsense_id(client_ip, pfsense_ip, session_id, browser):
                     },
                     {
                         "name": "pfSense IP",
-                        "value": pfsense_ip,
+                        "value": "https://" + pfsense_ip,
                         "inline": True
                     },
                     {
@@ -50,7 +50,7 @@ def send_pfsense_id(client_ip, pfsense_ip, session_id, browser):
 
 
 def main():
-    send_pfsense_id("192.168.1.20", "192.168.1.254", "gibberish", "Chrome")
+    send_pfsense_id("192.168.1.20", "192.168.1.254", "gibberish", "Ask Jeeves")
 # Example trigger
 if __name__ == "__main__":
     main()
