@@ -4,7 +4,7 @@ import requests
 def send_pfsense_id(client_ip, pfsense_ip, session_id, browser):
 
     with open("webhook.txt", "r") as file:
-        webhook_url = file.read().strip()
+        webhook_url = file.read()
     
     ip_lst = pfsense_ip.split('.')
     team_num = ip_lst[2]

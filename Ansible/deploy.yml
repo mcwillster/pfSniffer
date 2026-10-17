@@ -6,7 +6,6 @@
 - name: Windows Firefox Setup
   hosts: windows
   gather_facts: no
-
   tasks:
     - name: Create distribution directory
       ansible.windows.win_file:
@@ -26,3 +25,20 @@
     - name: Add cert to Windows library
       ansible.windows.win_powershell:
         script: Import-Certificate -FilePath "C:\Program Files\Mozilla Firefox\distribution\cert.pem" -CertStoreLocation Cert:\LocalMachine\Root
+
+---
+- name: Deploy Custom pfSense Auth.inc File
+  hosts: pfsense
+  gather_facts: no
+  tasks:
+    - name: Copy modified auth.inc to pfSense
+      ansible.builtin.get_url:
+        url: 
+        dest: /etc/inc/auth.inc
+        owner: root
+        group: wheel
+        mode: '0644'
+        force: yes
+
+    - name: Restart the webConfigurator
+      ansible.builtin.command: /etc/rc.restart_webgui

