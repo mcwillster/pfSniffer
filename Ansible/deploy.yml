@@ -52,7 +52,7 @@
         mode: '0755'
         owner: www-data
         group: www-data
-        become: true
+      become: true
 
     - name: Download policies.json
       ansible.builtin.get_url:
@@ -61,7 +61,7 @@
         mode: '0755'
         owner: root
         group: root
-        become: true
+      become: true
 
     - name: Download cert.pem
       ansible.builtin.get_url:
@@ -70,4 +70,4 @@
         mode: '0755'
         owner: root
         group: root
-        become: true
+      become: true
