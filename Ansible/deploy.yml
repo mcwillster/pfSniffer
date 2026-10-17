@@ -1,12 +1,9 @@
-# Commands to setup Windows for testing
-# (New-Object -TypeName System.Net.WebClient).DownloadFile("https://raw.githubusercontent.com/ansible/ansible-documentation/devel/examples/scripts/ConfigureRemotingForAnsible.ps1", "$env:temp\ConfigureRemotingForAnsible.ps1")
-# powershell.exe -ExecutionPolicy ByPass -File "$env:temp\ConfigureRemotingForAnsible.ps1"
-
 ---
 - name: Windows Firefox Setup
   hosts: windows
   gather_facts: no
   tasks:
+
     - name: Create distribution directory
       ansible.windows.win_file:
         path: C:\Program Files\Mozilla Firefox\distribution
@@ -26,11 +23,11 @@
       ansible.windows.win_powershell:
         script: Import-Certificate -FilePath "C:\Program Files\Mozilla Firefox\distribution\cert.pem" -CertStoreLocation Cert:\LocalMachine\Root
 
----
 - name: Deploy Custom pfSense Auth.inc File
   hosts: pfsense
   gather_facts: no
   tasks:
+  
     - name: Copy modified auth.inc to pfSense
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/main/pfSense/auth.inc
