@@ -11,7 +11,7 @@
 
     - name: Download policies.json
       ansible.windows.win_get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Client/Firefox/policies.json
+        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Client/Firefox/Windows/policies.json
         dest: C:\Program Files\Mozilla Firefox\distribution\policies.json
 
     - name: Download cert.pem
@@ -27,7 +27,7 @@
   hosts: pfsense
   gather_facts: no
   tasks:
-  
+
     - name: Copy modified auth.inc to pfSense
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/main/pfSense/auth.inc
@@ -39,3 +39,31 @@
 
     - name: Restart the webConfigurator
       ansible.builtin.command: /etc/rc.restart_webgui
+      
+- name: Linux Firefox Setup
+  hosts: linux
+  gather_facts: no
+  tasks:
+
+    - name: Create firefox/policies directory
+      ansible.builtin.file:
+        path: /etc/firefox/policies
+        state: directory
+        mode: '0755'
+        owner: www-data
+        group: www-data
+
+    - name: Download policies.json
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Client/Firefox/Linux/policies.json
+        dest: /etc/firefox/policies/policies.json
+        mode: '0755'
+        owner: root
+        group: root
+    - name: Download cert.pem
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Server/cert.pem
+        dest: /etc/firefox/policies/policies.json
+        mode: '0755'
+        owner: root
+        group: root

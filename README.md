@@ -23,8 +23,13 @@ Run these 2 commands in an **Administrator Powershell** on the target machines
 
 ***powershell.exe -ExecutionPolicy ByPass -File "$env:temp\ConfigureRemotingForAnsible.ps1"***
 
-### Step 1.5 (Unneeded if Ansible is already usable): Pre-Ansible Setup for pfSense
+#### Step 1.25: Pre-Ansible Setup for pfSense
 Log into the pfSense WebGUI, navigate to System > Advanced > Admin Access, check the box for Enable Secure Shell, and click Save at the bottom. Ansible also needs Python to run tasks, so go to Diagnostics > Command Prompt. In the Execute Shell Command box, enter ***pkg install -y python3*** and click Execute.
+
+#### Step 1.50: Pre-Ansible Setup for controller
+Ansible must be ran on linux, and sshpass must be installed to use a password instead of private keys.
+
+***sudo apt install sshpass***
 
 ### Step 2: Certificate Generation
 You must generate new cert.pem and key.pem files as my key.pem file is not included in this repository (I'm not that stupid). I used this command to generate them, it will ask a few questions about location and org info. You don't have to answer anything. Unfortunately due to the nature of the Firefox extension, the server IP must be 192.168.1.9
@@ -35,6 +40,7 @@ You must generate new cert.pem and key.pem files as my key.pem file is not inclu
 Download the *Server* and *Ansible* folder to your Ansible controller/Server. Python Requests package must also be installed with:
 
 ***pip install Requests***
+
 
 ### Step 4: Run Ansible
 You must edit hosts.ini to the IPs of the targets you wish to edit. These targets must all have step 1 performed on them prior to this, simply add a new line under windows with each IP. Then run this command on the Ansible controller, within the *Ansible* folder.
