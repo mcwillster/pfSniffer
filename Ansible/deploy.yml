@@ -39,7 +39,7 @@
 
     - name: Restart the webConfigurator
       ansible.builtin.command: /etc/rc.restart_webgui
-      
+
 - name: Linux Firefox Setup
   hosts: linux
   gather_facts: no
@@ -52,6 +52,7 @@
         mode: '0755'
         owner: www-data
         group: www-data
+        become: true
 
     - name: Download policies.json
       ansible.builtin.get_url:
@@ -60,6 +61,8 @@
         mode: '0755'
         owner: root
         group: root
+        become: true
+
     - name: Download cert.pem
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Server/cert.pem
@@ -67,3 +70,4 @@
         mode: '0755'
         owner: root
         group: root
+        become: true
