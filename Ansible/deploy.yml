@@ -33,7 +33,7 @@
   tasks:
     - name: Copy modified auth.inc to pfSense
       ansible.builtin.get_url:
-        url: 
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/main/pfSense/auth.inc
         dest: /etc/inc/auth.inc
         owner: root
         group: wheel
