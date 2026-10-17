@@ -1,7 +1,10 @@
 {
   "policies": {
     "Certificates": {
-        "ImportEnterpriseRoots": true
+        "ImportEnterpriseRoots": true,
+        "Install": [
+        "/etc/firefox/policies/cert.pem"
+        ] 
     },
     "ExtensionSettings": {    
       "pfsense_logger@bithavenbuffalo.com": {
