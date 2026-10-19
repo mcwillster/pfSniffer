@@ -37,7 +37,6 @@
 
 - name: Windows Chrome Setup
   hosts: windows
-  become: yes
   tasks:
     - name: Ensure the Chrome ExtensionInstallForcelist registry path exists
       ansible.windows.win_regedit:
