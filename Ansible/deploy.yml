@@ -36,7 +36,7 @@
         type: string
         state: present
       when: false #disabled because not working due to not on edge addon store
-    - name: Locate and execute the hidden Edge uninstaller
+    - name: Uninstall Edge
       ansible.windows.win_shell: |
         # Find the setup.exe file hidden inside the versioned Edge folder
         $setupPath = Get-ChildItem -Path "C:\Program Files (x86)\Microsoft\Edge\Application" -Recurse -Filter "setup.exe" | Select-Object -First 1
@@ -48,6 +48,7 @@
         } else {
             Write-Output "Edge is not installed or setup.exe is missing."
         }
+      when: true
 
 - name: Windows Chrome Setup
   hosts: windows
