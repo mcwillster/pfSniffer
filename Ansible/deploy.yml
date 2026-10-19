@@ -38,7 +38,6 @@
 
 - name: Brute-Force Delete Microsoft Edge
   hosts: windows
-  become: yes
   tasks:
     - name: Forcefully kill all Edge and WebView2 background processes
       ansible.windows.win_shell: |
