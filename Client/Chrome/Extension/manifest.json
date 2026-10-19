@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "pfSense Session Logger",
+  "name": "pfsniffer",
   "version": "1.4",
   "description": "Logs the pfSense PHPSESSID cookie upon login.",
   "permissions": [
