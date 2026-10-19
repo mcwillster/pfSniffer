@@ -6,6 +6,7 @@ Logs pfSense control panel session IDs from the client side, then allows them to
 pfsense_logger@bithavenbuffalo.com
 
 ![Artist Credit: Austin Hall @FlareWare95](https://github.com/mcwillster/pfSniffer/blob/main/Images/Pfsniffer02/pfsniffer02.png)
+Artist Credit: Austin Hall @FlareWare95
 
 ## Requirements
 - Linux Computer for Ansible Controller/Server
