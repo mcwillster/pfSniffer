@@ -40,7 +40,7 @@
   tasks:
     - name: Ensure the Chrome ExtensionInstallForcelist registry path exists
       ansible.windows.win_regedit:
-        path: HKLM\SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist
+        path: HKLM:\SOFTWARE\Policies\Google\Chrome\ExtensionInstallForcelist
         name: "1"
         data: "jdmninjjbnicomamhgcnomgimkbbmkch;https://clients2.google.com/service/update2/crx"
         type: string
