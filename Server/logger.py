@@ -52,7 +52,7 @@ def main():
     
     httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
 
-    my_thread = threading.Thread(target=website_backend.start_server)
+    threading.Thread(target=website_backend.start_server).start()
     
     httpd.serve_forever()
 
