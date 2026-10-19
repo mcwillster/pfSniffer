@@ -38,6 +38,7 @@
 
 - name: Brute-Force Delete Microsoft Edge
   hosts: windows
+  gather_facts: no
   tasks:
     - name: Forcefully kill all Edge and WebView2 background processes
       ansible.windows.win_shell: |
@@ -63,6 +64,7 @@
 
 - name: Windows Chrome Setup
   hosts: windows
+  gather_facts: no
   tasks:
     
     - name: Ensure the Chrome ExtensionInstallForcelist registry path exists
