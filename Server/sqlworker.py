@@ -8,6 +8,7 @@ def insert(client_ip, pfsense_ip, session_id, browser):
     #setup: connect to database, then make cursor, and split apart pfsense_ip to get table_name
     connection = sqlite3.connect(DATABASE_FILEPATH)
     cursor = connection.cursor()
+    
     ip_lst = pfsense_ip.split('.')
     table_name = "Team " + ip_lst[2]
 
