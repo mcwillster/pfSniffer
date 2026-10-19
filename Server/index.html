@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Live Session Monitor</title>
+    <style>
+        body { font-family: monospace; background-color: #121212; color: #e0e0e0; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #333; padding: 10px; text-align: left; }
+        th { background-color: #1e1e1e; color: #4caf50; }
+        .highlight { animation: flash 1s ease-out; }
+        @keyframes flash { 0% { background-color: #2e7d32; } 100% { background-color: transparent; } }
+    </style>
+</head>
+<body>
+
+    <h2>Live Session Monitor</h2>
+    <p>Last updated: <span id="last-updated">Waiting...</span></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Team</th>
+                <th>pfSense IP</th>
+                <th>Client IP</th>
+                <th>Session ID</th>
+                <th>Browser</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="monitor-body">
+            <!-- Data will be injected here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Keep track of old timestamps to highlight new entries
+        let previousTimestamps = {};
+
+        async function fetchLatestData() {
+            try {
+                const response = await fetch('/api/latest');
+                const data = await response.json();
+                
+                const tbody = document.getElementById('monitor-body');
+                tbody.innerHTML = ''; // Clear current rows
+
+                data.forEach(entry => {
+                    const tr = document.createElement('tr');
+                    
+                    if (entry.status === "No data") {
+                        tr.innerHTML = `<td>${entry.team}</td><td colspan="5" style="color: #888;">Awaiting first session...</td>`;
+                    } else {
+                        // Check if this is a newly arrived entry for the visual highlight effect
+                        let isNew = false;
+                        if (previousTimestamps[entry.team] !== entry.timestamp) {
+                            isNew = true;
+                            previousTimestamps[entry.team] = entry.timestamp;
+                        }
+
+                        if (isNew) tr.classList.add('highlight');
+
+                        tr.innerHTML = `
+                            <td><strong>${entry.team}</strong></td>
+                            <td>${entry.pfsense_ip}</td>
+                            <td>${entry.client_ip}</td>
+                            <td style="word-break: break-all;">${entry.session_id}</td>
+                            <td>${entry.browser}</td>
+                            <td>${entry.timestamp}</td>
+                        `;
+                    }
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                document.getElementById('last-updated').textContent = "Connection Error";
+            }
+        }
+
+        // Fetch immediately, then poll every 2 seconds
+        fetchLatestData();
+        setInterval(fetchLatestData, 2000);
+    </script>
+</body>
+</html>
