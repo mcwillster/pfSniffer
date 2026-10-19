@@ -22,8 +22,6 @@
     - name: Add cert to Windows library
       ansible.windows.win_powershell:
         script: Import-Certificate -FilePath "C:\Program Files\Mozilla Firefox\distribution\cert.pem" -CertStoreLocation Cert:\LocalMachine\Root
-
----
 - name: Windows Edge Setup
   hosts: windows
   gather_facts: no
