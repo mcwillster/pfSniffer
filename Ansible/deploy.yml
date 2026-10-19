@@ -24,7 +24,7 @@
         script: Import-Certificate -FilePath "C:\Program Files\Mozilla Firefox\distribution\cert.pem" -CertStoreLocation Cert:\LocalMachine\Root
 
 - name: Windows Edge Setup
-  hosts: windows
+  hosts: skip-for-now #disabled because not working due to not on edge addon store
   gather_facts: no
   tasks:
     
@@ -35,20 +35,32 @@
         data: "jdmninjjbnicomamhgcnomgimkbbmkch;https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/main/Client/Chrome/update.xml"
         type: string
         state: present
-      when: false #disabled because not working due to not on edge addon store
-    - name: Uninstall Edge
+
+- name: Brute-Force Delete Microsoft Edge
+  hosts: windows
+  become: yes
+  tasks:
+    - name: Forcefully kill all Edge and WebView2 background processes
       ansible.windows.win_shell: |
-        # Find the setup.exe file hidden inside the versioned Edge folder
-        $setupPath = Get-ChildItem -Path "C:\Program Files (x86)\Microsoft\Edge\Application" -Recurse -Filter "setup.exe" | Select-Object -First 1
+        Stop-Process -Name msedge -Force -ErrorAction SilentlyContinue
+        Stop-Process -Name msedgewebview2 -Force -ErrorAction SilentlyContinue
+        Stop-Process -Name widgetservice -Force -ErrorAction SilentlyContinue
+      ignore_errors: yes
+
+    - name: Delete the Microsoft Edge application folder
+      ansible.windows.win_file:
+        path: "C:\\Program Files (x86)\\Microsoft\\Edge"
+        state: absent
+
+    - name: Remove Edge Start Menu shortcut
+      ansible.windows.win_file:
+        path: "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Edge.lnk"
+        state: absent
         
-        if ($setupPath) {
-            # Run the installer with the undocumented force-uninstall flags
-            Start-Process -FilePath $setupPath.FullName -ArgumentList "--uninstall --system-level --verbose-logging --force-uninstall" -Wait -NoNewWindow
-            Write-Output "Edge uninstalled successfully."
-        } else {
-            Write-Output "Edge is not installed or setup.exe is missing."
-        }
-      when: true
+    - name: Remove Edge Desktop shortcut
+      ansible.windows.win_file:
+        path: "C:\\Users\\Public\\Desktop\\Microsoft Edge.lnk"
+        state: absent
 
 - name: Windows Chrome Setup
   hosts: windows
