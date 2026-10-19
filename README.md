@@ -5,6 +5,8 @@ Logs pfSense control panel session IDs from the client side, then allows them to
 ### Firefox Extension UUID
 pfsense_logger@bithavenbuffalo.com
 
+![Artist Credit: Austin Hall @FlareWare95](Images\Pfsniffer02\pfsniffer02.png)
+
 ## Requirements
 - Linux Computer for Ansible Controller/Server
     - Server IP must be 192.168.1.9
