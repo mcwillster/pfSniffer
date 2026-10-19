@@ -66,7 +66,7 @@
     - name: Download cert.pem
       ansible.builtin.get_url:
         url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Server/cert.pem
-        dest: /etc/firefox/policies/policies.json
+        dest: /etc/firefox/policies/cert.pem
         mode: '0755'
         owner: root
         group: root
