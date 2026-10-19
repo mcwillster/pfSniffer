@@ -62,7 +62,7 @@ class MonitorHandler(BaseHTTPRequestHandler):
             except FileNotFoundError:
                 self.wfile.write(b"index.html not found in the current directory.")
 
-if __name__ == '__main__':
+def start_server():
     port = 8080
     server = HTTPServer(('0.0.0.0', port), MonitorHandler)
     print(f"[*] Monitor server running on http://localhost:{port}")
@@ -71,3 +71,6 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print("\n[*] Shutting down monitor server.")
         server.server_close()
+
+if __name__ == "__main__":
+    start_server()
