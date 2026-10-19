@@ -23,6 +23,24 @@
       ansible.windows.win_powershell:
         script: Import-Certificate -FilePath "C:\Program Files\Mozilla Firefox\distribution\cert.pem" -CertStoreLocation Cert:\LocalMachine\Root
 
+---
+- name: Windows Edge Setup
+  hosts: windows
+  gather_facts: no
+  tasks:
+    - name: Force install custom Edge extension
+      ansible.windows.win_regedit:
+        path: HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallForcelist
+        name: "1"
+        data: "YOUR_EXTENSION_ID;https://your-local-server.com/update.xml"
+        type: string
+        state: present
+
+    - name: Update Group Policy to apply registry changes immediately
+      ansible.windows.win_command: gpupdate /force
+      register: gpupdate_result
+      changed_when: false
+
 - name: Deploy Custom pfSense Auth.inc File
   hosts: pfsense
   gather_facts: no
