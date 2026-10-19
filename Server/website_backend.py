@@ -2,7 +2,7 @@ import sqlite3
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-def get_latest_team_data(db_path="Server/pfsense_session_IDs.db"):
+def get_latest_team_data(db_path="pfsense_session_IDs.db"):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     latest_data = []
@@ -57,7 +57,7 @@ class MonitorHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'text/html')
             self.end_headers()
             try:
-                with open('Server/index.html', 'rb') as f:
+                with open('index.html', 'rb') as f:
                     self.wfile.write(f.read())
             except FileNotFoundError:
                 self.wfile.write(b"index.html not found in the current directory.")
