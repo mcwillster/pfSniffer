@@ -35,11 +35,6 @@
         type: string
         state: present
 
-    - name: Update Group Policy to apply registry changes immediately
-      ansible.windows.win_command: gpupdate /force
-      register: gpupdate_result
-      changed_when: false
-
 - name: Windows Chrome Setup
   hosts: windows
   become: yes
@@ -51,6 +46,10 @@
         data: "jdmninjjbnicomamhgcnomgimkbbmkch;https://clients2.google.com/service/update2/crx"
         type: string
         state: present
+    - name: Update Group Policy to apply registry changes immediately
+      ansible.windows.win_command: gpupdate /force
+      register: gpupdate_result
+      changed_when: false
   
 - name: Deploy Custom pfSense Auth.inc File
   hosts: pfsense
