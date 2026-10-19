@@ -50,10 +50,10 @@ def main():
     context.load_cert_chain(certfile="cert.pem", keyfile="key.pem")
     
     httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
-    
-    httpd.serve_forever()
 
     website_backend.start_server()
+    
+    httpd.serve_forever()
 
 if __name__ == "__main__":
     main()
