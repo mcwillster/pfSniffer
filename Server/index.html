@@ -10,6 +10,26 @@
         th { background-color: #1e1e1e; color: #4caf50; }
         .highlight { animation: flash 1s ease-out; }
         @keyframes flash { 0% { background-color: #2e7d32; } 100% { background-color: transparent; } }
+        
+        /* New styling for the copy button */
+        .copy-btn {
+            background-color: #333;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            padding: 3px 8px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+        }
+        .copy-btn:hover { background-color: #555; }
+        .copy-btn.copied {
+            background-color: #4caf50;
+            color: white;
+            border-color: #4caf50;
+        }
     </style>
 </head>
 <body>
@@ -34,8 +54,25 @@
     </table>
 
     <script>
-        // Keep track of old timestamps to highlight new entries
         let previousTimestamps = {};
+
+        // New function to handle clipboard copying and button visual feedback
+        function copySession(text, btnElement) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btnElement.innerText;
+                btnElement.innerText = "Copied!";
+                btnElement.classList.add("copied");
+                
+                // Reset the button after 1.5 seconds
+                setTimeout(() => {
+                    btnElement.innerText = originalText;
+                    btnElement.classList.remove("copied");
+                }, 1500);
+            }).catch(err => {
+                console.error("Failed to copy text: ", err);
+                btnElement.innerText = "Error";
+            });
+        }
 
         async function fetchLatestData() {
             try {
@@ -43,7 +80,7 @@
                 const data = await response.json();
                 
                 const tbody = document.getElementById('monitor-body');
-                tbody.innerHTML = ''; // Clear current rows
+                tbody.innerHTML = ''; 
 
                 data.forEach(entry => {
                     const tr = document.createElement('tr');
@@ -51,7 +88,6 @@
                     if (entry.status === "No data") {
                         tr.innerHTML = `<td>${entry.team}</td><td colspan="5" style="color: #888;">Awaiting first session...</td>`;
                     } else {
-                        // Check if this is a newly arrived entry for the visual highlight effect
                         let isNew = false;
                         if (previousTimestamps[entry.team] !== entry.timestamp) {
                             isNew = true;
@@ -60,11 +96,15 @@
 
                         if (isNew) tr.classList.add('highlight');
 
+                        // The session_id column now includes the copy button
                         tr.innerHTML = `
                             <td><strong>${entry.team}</strong></td>
                             <td>${entry.pfsense_ip}</td>
                             <td>${entry.client_ip}</td>
-                            <td style="word-break: break-all;">${entry.session_id}</td>
+                            <td style="word-break: break-all; display: flex; justify-content: space-between; align-items: center;">
+                                <span>${entry.session_id}</span>
+                                <button class="copy-btn" onclick="copySession('${entry.session_id}', this)">Copy</button>
+                            </td>
                             <td>${entry.browser}</td>
                             <td>${entry.timestamp}</td>
                         `;
@@ -79,7 +119,6 @@
             }
         }
 
-        // Fetch immediately, then poll every 2 seconds
         fetchLatestData();
         setInterval(fetchLatestData, 2000);
     </script>

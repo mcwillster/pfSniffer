@@ -34,9 +34,9 @@ def insert(client_ip, pfsense_ip, session_id, browser):
 
 #main function just so I can quickly and easily test changes I make to the database
 def main():
-    insert("192.168.1.10", "192.168.1.254", "Test1")
-    insert("192.168.2.10", "192.168.2.254", "Test2")
-    insert("192.168.3.11", "192.168.3.254", "Test3")
+    insert("192.168.1.10", "192.168.1.254", "Test1", "Chrome")
+    insert("192.168.2.10", "192.168.2.254", "Test2", "Firefox")
+    insert("192.168.3.11", "192.168.3.254", "Test3", "Chrome")
 
 if __name__ == "__main__":
     main()
