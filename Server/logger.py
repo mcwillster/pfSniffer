@@ -3,6 +3,7 @@ import urllib.parse
 import sqlworker
 import ssl
 import discord_bot
+import website_backend
 
 class LogHandler(BaseHTTPRequestHandler):
     def _send_cors_headers(self):
@@ -51,6 +52,8 @@ def main():
     httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
     
     httpd.serve_forever()
+
+    website_backend.start_server()
 
 if __name__ == "__main__":
     main()
