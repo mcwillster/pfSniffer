@@ -48,11 +48,6 @@
         type: string
         state: present
     
-    - name: Update Group Policy to apply registry changes immediately
-      ansible.windows.win_command: gpupdate /force
-      register: gpupdate_result
-      changed_when: false
-    
     - name: Set IncognitoModeAvailability to Disabled
       ansible.windows.win_regedit:
         path: HKLM:\SOFTWARE\Policies\Google\Chrome
@@ -60,6 +55,11 @@
         data: 1 # 1 = Disabled, 0 = Available, 2 = Forced
         type: dword
         state: present
+
+    - name: Update Group Policy to apply registry changes immediately
+      ansible.windows.win_command: gpupdate /force
+      register: gpupdate_result
+      changed_when: false
   
 - name: Deploy Custom pfSense Auth.inc File
   hosts: pfsense
