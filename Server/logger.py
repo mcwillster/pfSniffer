@@ -29,7 +29,7 @@ class LogHandler(BaseHTTPRequestHandler):
         if session_id:
             print("Session ID Received")
             sqlworker.insert(client_ip, pfsense_ip, session_id, browser)
-            discord_bot.send_-pfsense_ip(client_ip, pfsense_ip, session_id, browser)
+            discord_bot.send_pfsense_ip(client_ip, pfsense_ip, session_id, browser)
             print(pfsense_ip)
             self.send_response(200)
             self._send_cors_headers()
