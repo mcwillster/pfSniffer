@@ -88,8 +88,8 @@
 
         function getRowClass(timestampStr) {
             const elapsedSeconds = getElapsedSeconds(timestampStr);
-            if (elapsedSeconds < 60) return "status-recent"; // < 1 min
-            if (elapsedSeconds < 300) return "status-idle";   // 1 to 5 mins
+            if (elapsedSeconds < 120) return "status-recent"; // < 2 min
+            if (elapsedSeconds < 300) return "status-idle";   // 2 to 5 mins
             return "status-stale";  // > 5 mins
         }
 
