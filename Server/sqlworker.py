@@ -1,4 +1,5 @@
 import sqlite3
+import time
 
 DATABASE_FILEPATH = "pfsense_session_IDs.db"
 
@@ -34,9 +35,15 @@ def insert(client_ip, pfsense_ip, session_id, browser):
 
 #main function just so I can quickly and easily test changes I make to the database
 def main():
-    insert("192.168.1.10", "192.168.1.254", "Test1", "Chrome")
-    insert("192.168.2.10", "192.168.2.254", "Test2", "Firefox")
-    insert("192.168.3.11", "192.168.3.254", "Test3", "Chrome")
+    i=1
+    while i<16:
+        temp_clip = f"192.168.{i}.10"
+        temp_pfip = f"192.168.{i}.254"
+        temp_id = f"Test{i}"
+        temp_browser = "Firefox"
+        insert(temp_clip, temp_pfip, temp_id, temp_browser)
+        i += 1
+        time.sleep(3)
 
 if __name__ == "__main__":
     main()
