@@ -8,10 +8,14 @@
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #333; padding: 10px; text-align: left; }
         th { background-color: #1e1e1e; color: #4caf50; }
+        
         .highlight { animation: flash 1s ease-out; }
         @keyframes flash { 0% { background-color: #2e7d32; } 100% { background-color: transparent; } }
         
-        /* New styling for the copy button */
+        .status-recent { background-color: rgba(76, 175, 80, 0.15); } 
+        .status-idle { background-color: rgba(255, 152, 0, 0.15); }   
+        .status-stale { background-color: rgba(244, 67, 54, 0.15); color: #999; } 
+
         .copy-btn {
             background-color: #333;
             color: #e0e0e0;
@@ -30,6 +34,11 @@
             color: white;
             border-color: #4caf50;
         }
+        /* Style for the hoverable timestamp */
+        .time-ago {
+            cursor: help;
+            border-bottom: 1px dotted #888;
+        }
     </style>
 </head>
 <body>
@@ -45,7 +54,7 @@
                 <th>Client IP</th>
                 <th>Session ID</th>
                 <th>Browser</th>
-                <th>Timestamp</th>
+                <th>Age</th>
             </tr>
         </thead>
         <tbody id="monitor-body">
@@ -56,14 +65,11 @@
     <script>
         let previousTimestamps = {};
 
-        // New function to handle clipboard copying and button visual feedback
         function copySession(text, btnElement) {
             navigator.clipboard.writeText(text).then(() => {
                 const originalText = btnElement.innerText;
                 btnElement.innerText = "Copied!";
                 btnElement.classList.add("copied");
-                
-                // Reset the button after 1.5 seconds
                 setTimeout(() => {
                     btnElement.innerText = originalText;
                     btnElement.classList.remove("copied");
@@ -72,6 +78,35 @@
                 console.error("Failed to copy text: ", err);
                 btnElement.innerText = "Error";
             });
+        }
+
+        function getElapsedSeconds(timestampStr) {
+            const entryTime = new Date(timestampStr + "Z").getTime();
+            const now = Date.now();
+            return Math.floor((now - entryTime) / 1000);
+        }
+
+        function getRowClass(timestampStr) {
+            const elapsedSeconds = getElapsedSeconds(timestampStr);
+            if (elapsedSeconds < 60) return "status-recent"; // < 1 min
+            if (elapsedSeconds < 300) return "status-idle";   // 1 to 5 mins
+            return "status-stale";  // > 5 mins
+        }
+
+        // Converts raw seconds into a clean "5m ago" or "2h ago" format
+        function timeSince(timestampStr) {
+            const seconds = Math.max(0, getElapsedSeconds(timestampStr)); // Prevent negative drift
+            
+            if (seconds < 60) return seconds + "s ago";
+            
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return minutes + "m ago";
+            
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return hours + "h ago";
+            
+            const days = Math.floor(hours / 24);
+            return days + "d ago";
         }
 
         async function fetchLatestData() {
@@ -88,15 +123,14 @@
                     if (entry.status === "No data") {
                         tr.innerHTML = `<td>${entry.team}</td><td colspan="5" style="color: #888;">Awaiting first session...</td>`;
                     } else {
-                        let isNew = false;
+                        const ageClass = getRowClass(entry.timestamp);
+                        tr.classList.add(ageClass);
+
                         if (previousTimestamps[entry.team] !== entry.timestamp) {
-                            isNew = true;
+                            tr.classList.add('highlight');
                             previousTimestamps[entry.team] = entry.timestamp;
                         }
 
-                        if (isNew) tr.classList.add('highlight');
-
-                        // The session_id column now includes the copy button
                         tr.innerHTML = `
                             <td><strong>${entry.team}</strong></td>
                             <td>${entry.pfsense_ip}</td>
@@ -106,7 +140,7 @@
                                 <button class="copy-btn" onclick="copySession('${entry.session_id}', this)">Copy</button>
                             </td>
                             <td>${entry.browser}</td>
-                            <td>${entry.timestamp}</td>
+                            <td><span class="time-ago" title="${entry.timestamp} UTC">${timeSince(entry.timestamp)}</span></td>
                         `;
                     }
                     tbody.appendChild(tr);
