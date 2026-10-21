@@ -1,4 +1,4 @@
-# **pfSniffer** *(pfSense Logger)*\
+# **pfSniffer** *(pfSense Logger)*
 # UB Lockdown Branch
 
 ## Introduction
