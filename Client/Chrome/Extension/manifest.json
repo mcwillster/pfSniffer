@@ -1,13 +1,13 @@
 {
   "manifest_version": 3,
   "name": "pfsniffer",
-  "version": "1.5",
+  "version": "1.6",
   "description": "Logs the pfSense PHPSESSID cookie upon login.",
   "permissions": [
     "cookies"
   ],
   "host_permissions": [
-    "*://192.168.10.170/*",
+    "*://192.168.10.169/*",
     "*://10.1.1.1/*",
     "*://10.2.1.1/*",
     "*://10.3.1.1/*",
