@@ -1,6 +1,6 @@
 ---
 - name: Windows Firefox Setup
-  hosts: windows
+  hosts: win1, win2
   gather_facts: no
   tasks:
 
@@ -37,7 +37,7 @@
         state: present
 
 - name: Brute-Force Delete Microsoft Edge
-  hosts: windows
+  hosts: win1, win2
   gather_facts: no
   tasks:
     - name: Forcefully kill all Edge and WebView2 background processes
@@ -63,7 +63,7 @@
         state: absent
 
 - name: Windows Chrome Setup
-  hosts: windows
+  hosts: win1, win2
   gather_facts: no
   tasks:
     
@@ -89,7 +89,7 @@
       changed_when: false
   
 - name: Deploy Custom pfSense Auth.inc File
-  hosts: pfsense
+  hosts: routers
   gather_facts: no
   tasks:
 
