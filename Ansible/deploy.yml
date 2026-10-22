@@ -59,7 +59,7 @@
     
     - name: Remove Edge Taskbar shortcut
       ansible.windows.win_file:
-        path: "C:\\Users\\admin\\AppData\\Roaming\\Microsoft\\Internet Explorer\\Quick Launch\\Microsoft Edge.lnk"
+        path: "C:\\Users\\admin\\AppData\\Roaming\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\Taskbar\\Microsoft Edge.lnk"
         state: absent
         
     - name: Remove Edge Desktop shortcut
