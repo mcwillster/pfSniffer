@@ -13,6 +13,7 @@
       ansible.windows.win_get_url:
         url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Client/Firefox/Windows/policies.json
         dest: C:\Program Files\Mozilla Firefox\distribution\policies.json
+        force: true
 
     - name: Download cert.pem
       ansible.windows.win_get_url:
