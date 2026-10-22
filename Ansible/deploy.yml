@@ -11,12 +11,12 @@
 
     - name: Download policies.json
       ansible.windows.win_get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/UB-Lockdown/Client/Firefox/Windows/policies.json
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Client/Firefox/Windows/policies.json
         dest: C:\Program Files\Mozilla Firefox\distribution\policies.json
 
     - name: Download cert.pem
       ansible.windows.win_get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/UB-Lockdown/Server/cert.pem
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Server/cert.pem
         dest: C:\Program Files\Mozilla Firefox\distribution\cert.pem
 
     - name: Add cert to Windows library
@@ -126,7 +126,7 @@
 
     - name: Download policies.json
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/UB-Lockdown/Client/Firefox/Linux/policies.json
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Client/Firefox/Linux/policies.json
         dest: /etc/firefox/policies/policies.json
         mode: '0755'
         owner: root
@@ -135,7 +135,7 @@
 
     - name: Download cert.pem
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/UB-Lockdown/Server/cert.pem
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Server/cert.pem
         dest: /etc/firefox/policies/cert.pem
         mode: '0755'
         owner: root
