@@ -56,10 +56,15 @@
       ansible.windows.win_file:
         path: "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Edge.lnk"
         state: absent
+    
+    - name: Remove Edge Taskbar shortcut
+      ansible.windows.win_file:
+        path: "C:\\Users\\admin\\AppData\\Roaming\\Microsoft\\Internet Explorer\\Quick Launch\\Microsoft Edge.lnk"
+        state: absent
         
     - name: Remove Edge Desktop shortcut
       ansible.windows.win_file:
-        path: "C:\\Users\\Public\\Desktop\\Microsoft Edge.lnk"
+        path: "C:\\Users\\admin\\Desktop\\Microsoft Edge.lnk"
         state: absent
 
 - name: Windows Chrome Setup
