@@ -19,6 +19,7 @@
       ansible.windows.win_get_url:
         url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Server/cert.pem
         dest: C:\Program Files\Mozilla Firefox\distribution\cert.pem
+        force: true
 
     - name: Add cert to Windows library
       ansible.windows.win_powershell:
