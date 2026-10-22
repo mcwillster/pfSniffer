@@ -100,14 +100,14 @@
   gather_facts: no
   tasks:
 
-    - name: Copy modified auth.inc to pfSense
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/pfSense/auth.inc
-        dest: /etc/inc/auth.inc
-        owner: root
-        group: wheel
-        mode: '0644'
-        force: yes
+    - name: Replace the httponly line in auth.inc
+      ansible.builtin.lineinfile:
+        path: /etc/inc/auth.inc
+        # Matches the line regardless of current indentation or spacing
+        regexp: "^\\s*'httponly'\\s*=>\\s*true,"
+        # The exact string you want to replace it with
+        line: "    'httponly' => false," 
+        backup: yes
 
     - name: Restart the webConfigurator
       ansible.builtin.command: /etc/rc.restart_webgui
