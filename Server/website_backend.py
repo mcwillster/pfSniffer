@@ -24,7 +24,7 @@ def get_latest_team_data(db_path="pfsense_session_IDs.db"):
             if row:
                 latest_data.append({
                     "team": table_name,
-                    "pfsense_ip": "https://" + row[0],   # Maps pfsense_address to the HTML
+                    "pfsense_ip": "http://" + row[0],   # Maps pfsense_address to the HTML
                     "client_ip": row[1],    # Maps client_address to the HTML
                     "session_id": row[2],
                     "browser": row[3],
