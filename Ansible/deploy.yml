@@ -100,14 +100,13 @@
   gather_facts: no
   tasks:
 
-    - name: Copy modified auth.inc to pfSense
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/main/pfSense/auth.inc
-        dest: /etc/inc/auth.inc
-        owner: root
-        group: wheel
-        mode: '0777'
-        force: yes
+    - name: Disable HttpOnly for session cookies safely
+      ansible.builtin.replace:
+        path: /etc/inc/auth.inc
+        # Adjust the regex below based on exactly how it is written in your version's auth.inc
+        regexp: "'httponly'\\s*=>\\s*true"
+        replace: "'httponly' => false"
+        backup: yes
 
     - name: Restart the webConfigurator
       ansible.builtin.command: /etc/rc.restart_webgui
