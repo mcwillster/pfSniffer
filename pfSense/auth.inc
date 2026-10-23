@@ -2189,7 +2189,7 @@ function session_auth() {
 		'path' => $currentCookieParams["path"],
 		'domain' => NULL,
 		'secure' => (config_get_path('system/webgui/protocol') == "https"),
-		'httponly' => true,
+		'httponly' => false,
 		'samesite' => 'Strict'
 	]);
 
