@@ -111,6 +111,14 @@
     - name: Restart the webConfigurator
       ansible.builtin.command: /etc/rc.restart_webgui
 
+- name: OH SHIT I BROKE ANSIBLE WEB GUI 
+  hosts: skip-for-now
+  gather_facts: no
+  tasks:
+
+    - name: Reinstall pfsense package
+      ansible.builtin.command: pkg-static install -y -f pfsense
+
 - name: Linux Firefox Setup
   hosts: linux:children
   gather_facts: no
