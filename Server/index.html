@@ -65,19 +65,42 @@
     <script>
         let previousTimestamps = {};
 
+        function showCopied(btnElement) {
+            btnElement.innerText = "Copied!";
+            btnElement.classList.add("copied");
+            setTimeout(() => {
+                btnElement.innerText = "Copy";
+                btnElement.classList.remove("copied");
+            }, 1500);
+        }
+
         function copySession(text, btnElement) {
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = btnElement.innerText;
-                btnElement.innerText = "Copied!";
-                btnElement.classList.add("copied");
-                setTimeout(() => {
-                    btnElement.innerText = originalText;
-                    btnElement.classList.remove("copied");
-                }, 1500);
-            }).catch(err => {
-                console.error("Failed to copy text: ", err);
-                btnElement.innerText = "Error";
-            });
+            // Modern approach (Requires HTTPS or localhost)
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text)
+                    .then(() => showCopied(btnElement))
+                    .catch(err => {
+                        console.error("Failed to copy text: ", err);
+                        btnElement.innerText = "Error";
+                    });
+            } else {
+                // Fallback for local HTTP connections
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed"; // Prevent scrolling to bottom
+                textArea.style.opacity = "0";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showCopied(btnElement);
+                } catch (err) {
+                    console.error("Fallback copy failed: ", err);
+                    btnElement.innerText = "Error";
+                }
+                document.body.removeChild(textArea);
+            }
         }
 
         function getElapsedSeconds(timestampStr) {
@@ -133,7 +156,7 @@
 
                         tr.innerHTML = `
                             <td><strong>${entry.team}</strong></td>
-                            <td>${entry.pfsense_ip}</td>
+                            <td><a href="https://${entry.pfsense_ip}" target="_blank" style="color: #4caf50; text-decoration: none; border-bottom: 1px dashed #4caf50;">${entry.pfsense_ip}</a></td>
                             <td>${entry.client_ip}</td>
                             <td style="word-break: break-all; display: flex; justify-content: space-between; align-items: center;">
                                 <span>${entry.session_id}</span>
