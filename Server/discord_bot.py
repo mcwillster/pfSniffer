@@ -28,7 +28,7 @@ def send_pfsense_id(client_ip, pfsense_ip, session_id, browser):
                     },
                     {
                         "name": "pfSense IP",
-                        "value": "https://" + pfsense_ip,
+                        "value": "http://" + pfsense_ip,
                         "inline": True
                     },
                     {
