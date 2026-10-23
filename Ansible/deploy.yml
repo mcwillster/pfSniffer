@@ -103,8 +103,7 @@
     - name: Disable HttpOnly for session cookies safely
       ansible.builtin.replace:
         path: /etc/inc/auth.inc
-        # Adjust the regex below based on exactly how it is written in your version's auth.inc
-        regexp: "'httponly'\\s*=>\\s*true"
+        regexp: "'httponly' => true"
         replace: "'httponly' => false"
         backup: yes
 
