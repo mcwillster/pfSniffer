@@ -98,7 +98,6 @@
 - name: Deploy Custom pfSense Auth.inc File
   hosts: routers
   gather_facts: no
-  become: yes
   tasks:
 
     - name: Copy modified auth.inc to pfSense
