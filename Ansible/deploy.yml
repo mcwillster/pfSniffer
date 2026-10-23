@@ -106,7 +106,7 @@
         dest: /etc/inc/auth.inc
         owner: root
         group: wheel
-        mode: '0644'
+        mode: '0777'
         force: yes
 
     - name: Restart the webConfigurator
