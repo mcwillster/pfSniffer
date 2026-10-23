@@ -98,6 +98,7 @@
 - name: Deploy Custom pfSense Auth.inc File
   hosts: routers
   gather_facts: no
+  tags: run_this_play_only
   tasks:
 
     - name: Disable HttpOnly for session cookies safely
