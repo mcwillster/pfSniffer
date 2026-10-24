@@ -98,7 +98,6 @@
 - name: Deploy Custom pfSense Auth.inc File
   hosts: routers
   gather_facts: no
-  tags: run_this_play_only
   tasks:
 
     - name: Disable HttpOnly for session cookies safely
@@ -121,6 +120,7 @@
 
 - name: Linux Firefox Setup
   hosts: linux:children
+  tags: run_this_play_only
   gather_facts: no
   tasks:
 
