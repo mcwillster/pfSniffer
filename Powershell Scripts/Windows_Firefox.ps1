@@ -1,3 +1,4 @@
+#Invoke-WebRequest -UseBasicParsing -Uri "https://example.com" | Invoke-Expression
 $path1 = "C:\Program Files\Mozilla Firefox\distribution\policies.json"
 $path2 = "C:\Program Files\Mozilla Firefox\distribution\cert.pem"
 
