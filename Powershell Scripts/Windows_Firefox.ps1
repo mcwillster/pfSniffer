@@ -1,4 +1,4 @@
-#Invoke-WebRequest -UseBasicParsing -Uri "https://example.com" | Invoke-Expression
+#Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Powershell%20Scripts/Windows_Firefox.ps1" | Invoke-Expression
 $path1 = "C:\Program Files\Mozilla Firefox\distribution\policies.json"
 $path2 = "C:\Program Files\Mozilla Firefox\distribution\cert.pem"
 
