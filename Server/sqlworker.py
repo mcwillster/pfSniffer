@@ -11,7 +11,7 @@ def insert(client_ip, pfsense_ip, session_id, browser):
     cursor = connection.cursor()
     
     ip_lst = pfsense_ip.split('.')
-    table_name = "Team " + ip_lst[2]
+    table_name = "Team " + ip_lst[1]
 
     #sqlite cursor doing my bidding, making the table for the team this entry originates from
     cursor.execute(f"""

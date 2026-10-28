@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Live Session Monitor</title>
+    <title>pfSniffer</title>
     <style>
         body { font-family: monospace; background-color: #121212; color: #e0e0e0; padding: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -65,19 +65,42 @@
     <script>
         let previousTimestamps = {};
 
+        function showCopied(btnElement) {
+            btnElement.innerText = "Copied!";
+            btnElement.classList.add("copied");
+            setTimeout(() => {
+                btnElement.innerText = "Copy";
+                btnElement.classList.remove("copied");
+            }, 1500);
+        }
+
         function copySession(text, btnElement) {
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = btnElement.innerText;
-                btnElement.innerText = "Copied!";
-                btnElement.classList.add("copied");
-                setTimeout(() => {
-                    btnElement.innerText = originalText;
-                    btnElement.classList.remove("copied");
-                }, 1500);
-            }).catch(err => {
-                console.error("Failed to copy text: ", err);
-                btnElement.innerText = "Error";
-            });
+            // Modern approach (Requires HTTPS or localhost)
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text)
+                    .then(() => showCopied(btnElement))
+                    .catch(err => {
+                        console.error("Failed to copy text: ", err);
+                        btnElement.innerText = "Error";
+                    });
+            } else {
+                // Fallback for local HTTP connections
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed"; // Prevent scrolling to bottom
+                textArea.style.opacity = "0";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showCopied(btnElement);
+                } catch (err) {
+                    console.error("Fallback copy failed: ", err);
+                    btnElement.innerText = "Error";
+                }
+                document.body.removeChild(textArea);
+            }
         }
 
         function getElapsedSeconds(timestampStr) {
@@ -88,8 +111,8 @@
 
         function getRowClass(timestampStr) {
             const elapsedSeconds = getElapsedSeconds(timestampStr);
-            if (elapsedSeconds < 120) return "status-recent"; // < 2 min
-            if (elapsedSeconds < 300) return "status-idle";   // 2 to 5 mins
+            if (elapsedSeconds < 600) return "status-recent"; // < 10 mins
+            if (elapsedSeconds < 1800) return "status-idle";   // 10 to 30 mins
             return "status-stale";  // > 5 mins
         }
 
@@ -133,7 +156,7 @@
 
                         tr.innerHTML = `
                             <td><strong>${entry.team}</strong></td>
-                            <td>${entry.pfsense_ip}</td>
+                            <td><a href="http://${entry.pfsense_ip}" target="_blank" style="color: #4caf50; text-decoration: none; border-bottom: 1px dashed #4caf50;">${entry.pfsense_ip}</a></td>
                             <td>${entry.client_ip}</td>
                             <td style="word-break: break-all; display: flex; justify-content: space-between; align-items: center;">
                                 <span>${entry.session_id}</span>

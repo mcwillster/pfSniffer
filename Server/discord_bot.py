@@ -7,7 +7,7 @@ def send_pfsense_id(client_ip, pfsense_ip, session_id, browser):
         webhook_url = file.read()
     
     ip_lst = pfsense_ip.split('.')
-    team_num = ip_lst[2]
+    team_num = ip_lst[1]
 
     # Format message or an embed
     data = {
@@ -28,7 +28,7 @@ def send_pfsense_id(client_ip, pfsense_ip, session_id, browser):
                     },
                     {
                         "name": "pfSense IP",
-                        "value": "https://" + pfsense_ip,
+                        "value": "http://" + pfsense_ip,
                         "inline": True
                     },
                     {

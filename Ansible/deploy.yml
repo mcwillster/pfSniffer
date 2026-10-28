@@ -1,6 +1,6 @@
 ---
 - name: Windows Firefox Setup
-  hosts: windows
+  hosts: windows:children
   gather_facts: no
   tasks:
 
@@ -11,13 +11,15 @@
 
     - name: Download policies.json
       ansible.windows.win_get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Client/Firefox/Windows/policies.json
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Client/Firefox/Windows/policies.json
         dest: C:\Program Files\Mozilla Firefox\distribution\policies.json
+        force: true
 
     - name: Download cert.pem
       ansible.windows.win_get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Server/cert.pem
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Server/cert.pem
         dest: C:\Program Files\Mozilla Firefox\distribution\cert.pem
+        force: true
 
     - name: Add cert to Windows library
       ansible.windows.win_powershell:
@@ -32,12 +34,12 @@
       ansible.windows.win_regedit:
         path: HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallForcelist
         name: "1"
-        data: "jdmninjjbnicomamhgcnomgimkbbmkch;https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/main/Client/Chrome/update.xml"
+        data: "jdmninjjbnicomamhgcnomgimkbbmkch;https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Client/Chrome/update.xml"
         type: string
         state: present
 
 - name: Brute-Force Delete Microsoft Edge
-  hosts: windows
+  hosts: windows:children
   gather_facts: no
   tasks:
     - name: Forcefully kill all Edge and WebView2 background processes
@@ -56,14 +58,19 @@
       ansible.windows.win_file:
         path: "C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Edge.lnk"
         state: absent
+    
+    - name: Remove Edge Taskbar shortcut
+      ansible.windows.win_file:
+        path: "C:\\Users\\admin\\AppData\\Roaming\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\Taskbar\\Microsoft Edge.lnk"
+        state: absent
         
     - name: Remove Edge Desktop shortcut
       ansible.windows.win_file:
-        path: "C:\\Users\\Public\\Desktop\\Microsoft Edge.lnk"
+        path: "C:\\Users\\admin\\Desktop\\Microsoft Edge.lnk"
         state: absent
 
 - name: Windows Chrome Setup
-  hosts: windows
+  hosts: windows:children
   gather_facts: no
   tasks:
     
@@ -89,24 +96,31 @@
       changed_when: false
   
 - name: Deploy Custom pfSense Auth.inc File
-  hosts: pfsense
+  hosts: routers
   gather_facts: no
   tasks:
 
-    - name: Copy modified auth.inc to pfSense
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/main/pfSense/auth.inc
-        dest: /etc/inc/auth.inc
-        owner: root
-        group: wheel
-        mode: '0644'
-        force: yes
+    - name: Disable HttpOnly for session cookies safely
+      ansible.builtin.replace:
+        path: /etc/inc/auth.inc
+        regexp: "'httponly' => true"
+        replace: "'httponly' => false"
+        backup: yes
 
     - name: Restart the webConfigurator
       ansible.builtin.command: /etc/rc.restart_webgui
 
+- name: OH SHIT I BROKE ANSIBLE WEB GUI 
+  hosts: skip-for-now
+  gather_facts: no
+  tasks:
+
+    - name: Reinstall pfsense package
+      ansible.builtin.command: pkg-static install -y -f pfsense
+
 - name: Linux Firefox Setup
-  hosts: linux
+  hosts: linux:children
+  tags: run_this_play_only
   gather_facts: no
   tasks:
 
@@ -121,7 +135,7 @@
 
     - name: Download policies.json
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Client/Firefox/Linux/policies.json
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Client/Firefox/Linux/policies.json
         dest: /etc/firefox/policies/policies.json
         mode: '0755'
         owner: root
@@ -130,7 +144,7 @@
 
     - name: Download cert.pem
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfsense-logger/refs/heads/main/Server/cert.pem
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Server/cert.pem
         dest: /etc/firefox/policies/cert.pem
         mode: '0755'
         owner: root
