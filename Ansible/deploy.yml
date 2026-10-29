@@ -129,8 +129,8 @@
         path: /etc/firefox/policies
         state: directory
         mode: '0755'
-        owner: www-data
-        group: www-data
+        owner: root
+        group: root
       become: true
 
     - name: Download policies.json
