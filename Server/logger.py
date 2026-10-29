@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import urllib.parse
 import sqlworker
