@@ -1,6 +1,6 @@
 ---
 - name: Windows Firefox Setup
-  hosts: windows:children
+  hosts: windows
   gather_facts: no
   tasks:
 
@@ -39,7 +39,7 @@
         state: present
 
 - name: Brute-Force Delete Microsoft Edge
-  hosts: windows:children
+  hosts: windows
   gather_facts: no
   tasks:
     - name: Forcefully kill all Edge and WebView2 background processes
@@ -70,7 +70,7 @@
         state: absent
 
 - name: Windows Chrome Setup
-  hosts: windows:children
+  hosts: windows
   gather_facts: no
   tasks:
     
@@ -119,7 +119,7 @@
       ansible.builtin.command: pkg-static install -y -f pfsense
 
 - name: Linux Firefox Setup
-  hosts: linux:children
+  hosts: linux
   tags: run_this_play_only
   gather_facts: no
   tasks:
