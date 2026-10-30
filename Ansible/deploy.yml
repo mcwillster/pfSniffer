@@ -96,7 +96,7 @@
       changed_when: false
   
 - name: Deploy Custom pfSense Auth.inc File
-  hosts: routers
+  hosts: router
   gather_facts: no
   tasks:
 
