@@ -33,7 +33,7 @@ class LogHandler(BaseHTTPRequestHandler):
         
         if session_id:
             print("Session ID Received")
-            logged_in = verify_pfsense_session(pfsense_ip, session_id)
+            logged_in = asyncio.run(verify_pfsense_session(pfsense_ip, session_id))
             if logged_in: 
                 sqlworker.insert(client_ip, pfsense_ip, session_id, browser)
                 discord_bot.send_pfsense_id(client_ip, pfsense_ip, session_id, browser)
