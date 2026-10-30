@@ -80,7 +80,7 @@ async def verify_pfsense_session(router_ip: str, phpsessid: str) -> bool:
                 return False
                 
     except asyncio.TimeoutError:
-        print(f"Timeout: Could not reach pfSense at {router_ip} within 3 seconds.")
+        print(f"Timeout: Could not reach pfSense at {router_ip} within 10 seconds.")
         return False
     except aiohttp.ClientError as e:
         print(f"Connection error to pfSense at {router_ip}: {e}")
