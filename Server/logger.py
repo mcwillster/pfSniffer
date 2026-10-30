@@ -62,7 +62,7 @@ async def verify_pfsense_session(router_ip: str, phpsessid: str) -> bool:
     
     try:
         async with aiohttp.ClientSession(connector=connector, cookies=cookies, headers=headers) as session:
-            async with session.get(url, allow_redirects=False, timeout=3) as response:
+            async with session.get(url, allow_redirects=False, timeout=10) as response:
                 
                 print(f"DEBUG [{router_ip}]: Status Code {response.status}")
                 print(f"DEBUG [{router_ip}]: Headers: {dict(response.headers)}")
