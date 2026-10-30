@@ -11,13 +11,13 @@
 
     - name: Download policies.json
       ansible.windows.win_get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Client/Firefox/Windows/policies.json
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/IRSeC/Client/Firefox/Windows/policies.json
         dest: C:\Program Files\Mozilla Firefox\distribution\policies.json
         force: true
 
     - name: Download cert.pem
       ansible.windows.win_get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Server/cert.pem
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/IRSeC/Server/cert.pem
         dest: C:\Program Files\Mozilla Firefox\distribution\cert.pem
         force: true
 
@@ -34,7 +34,7 @@
       ansible.windows.win_regedit:
         path: HKLM:\SOFTWARE\Policies\Microsoft\Edge\ExtensionInstallForcelist
         name: "1"
-        data: "jdmninjjbnicomamhgcnomgimkbbmkch;https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Client/Chrome/update.xml"
+        data: "jdmninjjbnicomamhgcnomgimkbbmkch;https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/IRSeC/Client/Chrome/update.xml"
         type: string
         state: present
 
@@ -135,7 +135,7 @@
 
     - name: Download policies.json
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Client/Firefox/Linux/policies.json
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/IRSeC/Client/Firefox/Linux/policies.json
         dest: /etc/firefox/policies/policies.json
         mode: '0755'
         owner: root
@@ -144,7 +144,7 @@
 
     - name: Download cert.pem
       ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/UB-Lockdown/Server/cert.pem
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/IRSeC/Server/cert.pem
         dest: /etc/firefox/policies/cert.pem
         mode: '0755'
         owner: root
