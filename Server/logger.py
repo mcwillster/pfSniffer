@@ -53,18 +53,32 @@ async def verify_pfsense_session(router_ip: str, phpsessid: str) -> bool:
     url = f"https://{router_ip}/status_interfaces.php"
     cookies = {'PHPSESSID': phpsessid}
     
-    # Disable SSL verification as lab routers typically utilize self-signed certs
+    # Masquerade as a standard Chrome browser to bypass bot filters
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    }
+    
     connector = aiohttp.TCPConnector(ssl=False)
     
     try:
-        async with aiohttp.ClientSession(connector=connector, cookies=cookies) as session:
-            # allow_redirects=False catches the immediate 302 on unauthenticated cookies
+        async with aiohttp.ClientSession(connector=connector, cookies=cookies, headers=headers) as session:
             async with session.get(url, allow_redirects=False, timeout=3) as response:
+                
+                print(f"DEBUG [{router_ip}]: Status Code {response.status}")
+                print(f"DEBUG [{router_ip}]: Headers: {dict(response.headers)}")
+                
                 if response.status == 200:
                     return True
-                elif response.status == 302 and 'index.php' in response.headers.get('Location', ''):
+                elif response.status == 302:
+                    location = response.headers.get('Location', '')
+                    print(f"DEBUG [{router_ip}]: Redirected to {location}")
                     return False
+                
+                # If we get a 403, 500, or something else, print the HTML to see what pfSense is complaining about
+                html_body = await response.text()
+                print(f"DEBUG [{router_ip}]: HTML Output (First 200 chars): {html_body[:200]}")
                 return False
+                
     except asyncio.TimeoutError:
         print(f"Timeout: Could not reach pfSense at {router_ip} within 3 seconds.")
         return False
