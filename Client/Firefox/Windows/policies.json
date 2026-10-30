@@ -6,7 +6,7 @@
     "ExtensionSettings": {    
       "pfsense_logger@bithavenbuffalo.com": {
         "installation_mode": "force_installed",
-        "install_url": "https://github.com/mcwillster/pfSniffer/raw/refs/heads/UB-Lockdown/Client/Firefox/web-ext-artifacts/148383af19f249a0a7fd-1.8.xpi"
+        "install_url": "https://github.com/mcwillster/pfSniffer/raw/refs/heads/IRSeC/Client/Firefox/web-ext-artifacts/148383af19f249a0a7fd-1.8.xpi"
       }
     }
   }
