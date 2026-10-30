@@ -7,7 +7,8 @@ def get_latest_team_data(db_path="pfsense_session_IDs.db"):
     cursor = conn.cursor()
     latest_data = []
     
-    for i in range(1, 16):
+    # Updated range to support 20 teams (1 through 20)
+    for i in range(1, 21):
         # Maps to your "Team X" format
         table_name = f"Team {i}" 
         try:
