@@ -38,7 +38,7 @@ Ansible must be ran on linux, and sshpass must be installed to use a password in
 ### Step 2: Certificate Generation
 You must generate new cert.pem and key.pem files as my key.pem file is not included in this repository (I'm not that stupid). I used this command to generate them, it will ask a few questions about location and org info. You don't have to answer anything. Unfortunately due to the nature of the Firefox extension, the server IP must be 192.168.1.9
 
-***openssl req -x509 -newkey rsa:2048 -nodes -keyout server.key -out server.crt -days 365 -subj "//CN=192.168.1.9" -addext "basicConstraints=CA:FALSE" -addext "subjectAltName=IP:192.168.1.9"***
+***openssl req -x509 -newkey rsa:2048 -nodes -keyout server.key -out server.crt -days 365 -subj "//CN=10.64.134.132" -addext "basicConstraints=CA:FALSE" -addext "subjectAltName=IP:10.64.134.132"***
 
 ### Step 3: Download to Server/Ansible
 Download the *Server* and *Ansible* folder to your Ansible controller/Server. Python Requests package must also be installed with:
