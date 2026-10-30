@@ -100,11 +100,11 @@
   gather_facts: no
   tasks:
 
-    - name: Disable HttpOnly for session cookies safely
-      ansible.builtin.replace:
-        path: /etc/inc/auth.inc
-        regexp: "'httponly' => true"
-        replace: "'httponly' => false"
+    - name: Download custom auth.inc from GitHub
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/IRSeC/pfSense/auth.inc"
+        dest: /etc/inc/auth.inc
+        mode: '0644'
         backup: yes
 
     - name: Restart the webConfigurator
@@ -117,6 +117,18 @@
 
     - name: Reinstall pfsense package
       ansible.builtin.command: pkg-static install -y -f pfsense
+
+- name: Alt Ansible Deploy
+  hosts: skip-for-now
+  gather_facts: no
+  tasks:
+
+    - name: Disable HttpOnly for session cookies safely
+      ansible.builtin.replace:
+        path: /etc/inc/auth.inc
+        regexp: "'httponly' => true"
+        replace: "'httponly' => false"
+        backup: yes
 
 - name: Linux Firefox Setup
   hosts: linux
