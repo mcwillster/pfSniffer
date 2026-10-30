@@ -55,14 +55,21 @@ async def verify_pfsense_session(router_ip: str, phpsessid: str) -> bool:
     # Disable SSL verification as lab routers typically utilize self-signed certs
     connector = aiohttp.TCPConnector(ssl=False)
     
-    async with aiohttp.ClientSession(connector=connector, cookies=cookies) as session:
-        # allow_redirects=False catches the immediate 302 on unauthenticated cookies
-        async with session.get(url, allow_redirects=False, timeout=3) as response:
-            if response.status == 200:
-                return True
-            elif response.status == 302 and 'index.php' in response.headers.get('Location', ''):
+    try:
+        async with aiohttp.ClientSession(connector=connector, cookies=cookies) as session:
+            # allow_redirects=False catches the immediate 302 on unauthenticated cookies
+            async with session.get(url, allow_redirects=False, timeout=3) as response:
+                if response.status == 200:
+                    return True
+                elif response.status == 302 and 'index.php' in response.headers.get('Location', ''):
+                    return False
                 return False
-            return False
+    except asyncio.TimeoutError:
+        print(f"Timeout: Could not reach pfSense at {router_ip} within 3 seconds.")
+        return False
+    except aiohttp.ClientError as e:
+        print(f"Connection error to pfSense at {router_ip}: {e}")
+        return False
 
 def main():
     
