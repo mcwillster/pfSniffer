@@ -50,7 +50,7 @@ async def verify_pfsense_session(router_ip: str, phpsessid: str) -> bool:
     """
     Evaluates if a pfSense PHPSESSID represents a signed-in administrative session.
     """
-    url = f"https://{router_ip}/status_interfaces.php"
+    url = f"http://{router_ip}/status_interfaces.php"
     cookies = {'PHPSESSID': phpsessid}
     
     # Masquerade as a standard Chrome browser to bypass bot filters
