@@ -12,9 +12,9 @@ def get_latest_team_data(db_path="pfsense_session_IDs.db"):
         # Maps to your "Team X" format
         table_name = f"Team {i}" 
         try:
-            # Matches your exact table and column names
+            # Added logged_in to the SELECT query
             query = f"""
-                SELECT pfsense_address, client_address, session_id, browser, timestamp 
+                SELECT pfsense_address, client_address, session_id, browser, timestamp, logged_in
                 FROM '{table_name}' 
                 ORDER BY timestamp DESC 
                 LIMIT 1
@@ -22,6 +22,7 @@ def get_latest_team_data(db_path="pfsense_session_IDs.db"):
             cursor.execute(query)
             row = cursor.fetchone()
             
+            # Check if row exists (passes the data to the frontend regardless of logged_in status)
             if row:
                 latest_data.append({
                     "team": table_name,
@@ -29,9 +30,11 @@ def get_latest_team_data(db_path="pfsense_session_IDs.db"):
                     "client_ip": row[1],    # Maps client_address to the HTML
                     "session_id": row[2],
                     "browser": row[3],
-                    "timestamp": row[4]
+                    "timestamp": row[4],
+                    "logged_in": bool(row[5])
                 })
             else:
+                # Shows as 'No data' only if the team has no entries at all
                 latest_data.append({"team": table_name, "status": "No data"})
                 
         except sqlite3.OperationalError:

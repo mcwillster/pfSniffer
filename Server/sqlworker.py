@@ -4,7 +4,7 @@ import time
 DATABASE_FILEPATH = "pfsense_session_IDs.db"
 
 #Function to insert an entry in my pfsense master database
-def insert(client_ip, pfsense_ip, session_id, browser):
+def insert(client_ip, pfsense_ip, session_id, browser, logged_in):
 
     #setup: connect to database, then make cursor, and split apart pfsense_ip to get table_name
     connection = sqlite3.connect(DATABASE_FILEPATH)
@@ -21,14 +21,15 @@ def insert(client_ip, pfsense_ip, session_id, browser):
             pfsense_address VARCHAR(15) NOT NULL,
             session_id TEXT NOT NULL,
             timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            browser TEXT NOT NULL
+            browser TEXT NOT NULL,
+            logged_in BOOLEAN NOT NULL DEFAULT 0 CHECK (logged_in IN (0, 1))
         )
     """)
 
     #sqlite cursor doing my bidding once again like a good minion, insert entry
     cursor.execute(
-        f"INSERT INTO '{table_name}' (client_address, pfsense_address, session_id, browser) values(?, ?, ?, ?)", 
-        (client_ip, pfsense_ip, session_id, browser)
+        f"INSERT INTO '{table_name}' (client_address, pfsense_address, session_id, browser, logged_in) values(?, ?, ?, ?, ?)", 
+        (client_ip, pfsense_ip, session_id, browser, logged_in)
     )
     #git workflow fire 
     connection.commit()
@@ -37,13 +38,14 @@ def insert(client_ip, pfsense_ip, session_id, browser):
 def main():
     i=1
     while i<16:
-        temp_clip = f"192.168.{i}.10"
-        temp_pfip = f"192.168.{i}.254"
+        temp_clip = f"10.{i}.1.10"
+        temp_pfip = f"10.{i}.1.254"
         temp_id = f"Test{i}"
         temp_browser = "Firefox"
-        insert(temp_clip, temp_pfip, temp_id, temp_browser)
+        logged_in = True
+        insert(temp_clip, temp_pfip, temp_id, temp_browser, logged_in)
         i += 1
-        time.sleep(3)
+        time.sleep(2)
 
 if __name__ == "__main__":
     main()

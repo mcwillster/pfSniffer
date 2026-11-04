@@ -15,6 +15,7 @@
         .status-recent { background-color: rgba(76, 175, 80, 0.15); } 
         .status-idle { background-color: rgba(255, 152, 0, 0.15); }   
         .status-stale { background-color: rgba(244, 67, 54, 0.15); color: #999; } 
+        .status-logged-out { background-color: rgba(255, 152, 0, 0.05); color: #ff9800; }
 
         .copy-btn {
             background-color: #333;
@@ -43,7 +44,7 @@
 </head>
 <body>
 
-    <h2>Live Session Monitor</h2>
+    <h2>pfSniffer Live Monitor</h2>
     <p>Last updated: <span id="last-updated">Waiting...</span></p>
 
     <table>
@@ -145,6 +146,15 @@
                     
                     if (entry.status === "No data") {
                         tr.innerHTML = `<td>${entry.team}</td><td colspan="5" style="color: #888;">Awaiting first session...</td>`;
+                    } else if (!entry.logged_in) {
+                        // Display IPs but show not logged in for the remaining columns
+                        tr.classList.add('status-logged-out');
+                        tr.innerHTML = `
+                            <td><strong>${entry.team}</strong></td>
+                            <td><a href="http://${entry.pfsense_ip}" target="_blank" style="color: #4caf50; text-decoration: none; border-bottom: 1px dashed #4caf50;">${entry.pfsense_ip}</a></td>
+                            <td>${entry.client_ip}</td>
+                            <td colspan="3" style="text-align: center; font-style: italic;">Not logged in</td>
+                        `;
                     } else {
                         const ageClass = getRowClass(entry.timestamp);
                         tr.classList.add(ageClass);
