@@ -7,7 +7,7 @@
         body { font-family: monospace; background-color: #121212; color: #e0e0e0; padding: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #333; padding: 10px; text-align: left; }
-        th { background-color: #1e1e1e; color: #4caf50; }
+        th { background-color: #1e1e1e; color: #2196f3; } 
         
         .highlight { animation: flash 1s ease-out; }
         @keyframes flash { 0% { background-color: #2e7d32; } 100% { background-color: transparent; } }
@@ -16,6 +16,25 @@
         .status-idle { background-color: rgba(255, 152, 0, 0.15); }   
         .status-stale { background-color: rgba(244, 67, 54, 0.15); color: #999; } 
         .status-logged-out { background-color: rgba(255, 152, 0, 0.05); color: #ff9800; }
+
+        /* --- NEW STYLES FOR HEADER AND DOWNLOAD BUTTON --- */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .download-btn {
+            background-color: #2196f3;
+            color: #ffffff;
+            padding: 10px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        .download-btn:hover {
+            background-color: #1976d2;
+        }
 
         .copy-btn {
             background-color: #333;
@@ -35,7 +54,6 @@
             color: white;
             border-color: #4caf50;
         }
-        /* Style for the hoverable timestamp */
         .time-ago {
             cursor: help;
             border-bottom: 1px dotted #888;
@@ -44,8 +62,14 @@
 </head>
 <body>
 
-    <h2>pfSniffer Live Monitor</h2>
-    <p>Last updated: <span id="last-updated">Waiting...</span></p>
+    <!-- --- UPDATED HEADER SECTION --- -->
+    <div class="header-container">
+        <div>
+            <h2>Live Session Monitor</h2>
+            <p>Last updated: <span id="last-updated">Waiting...</span></p>
+        </div>
+        <a href="/api/download_db" class="download-btn">Download DB</a>
+    </div>
 
     <table>
         <thead>
@@ -76,7 +100,6 @@
         }
 
         function copySession(text, btnElement) {
-            // Modern approach (Requires HTTPS or localhost)
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(text)
                     .then(() => showCopied(btnElement))
@@ -85,10 +108,9 @@
                         btnElement.innerText = "Error";
                     });
             } else {
-                // Fallback for local HTTP connections
                 const textArea = document.createElement("textarea");
                 textArea.value = text;
-                textArea.style.position = "fixed"; // Prevent scrolling to bottom
+                textArea.style.position = "fixed"; 
                 textArea.style.opacity = "0";
                 document.body.appendChild(textArea);
                 textArea.focus();
@@ -112,14 +134,13 @@
 
         function getRowClass(timestampStr) {
             const elapsedSeconds = getElapsedSeconds(timestampStr);
-            if (elapsedSeconds < 600) return "status-recent"; // < 10 mins
-            if (elapsedSeconds < 1800) return "status-idle";   // 10 to 30 mins
-            return "status-stale";  // > 5 mins
+            if (elapsedSeconds < 600) return "status-recent"; 
+            if (elapsedSeconds < 1800) return "status-idle";   
+            return "status-stale";  
         }
 
-        // Converts raw seconds into a clean "5m ago" or "2h ago" format
         function timeSince(timestampStr) {
-            const seconds = Math.max(0, getElapsedSeconds(timestampStr)); // Prevent negative drift
+            const seconds = Math.max(0, getElapsedSeconds(timestampStr)); 
             
             if (seconds < 60) return seconds + "s ago";
             
@@ -146,33 +167,32 @@
                     
                     if (entry.status === "No data") {
                         tr.innerHTML = `<td>${entry.team}</td><td colspan="5" style="color: #888;">Awaiting first session...</td>`;
-                    } else if (!entry.logged_in) {
-                        // Display IPs but show not logged in for the remaining columns
-                        tr.classList.add('status-logged-out');
-                        tr.innerHTML = `
-                            <td><strong>${entry.team}</strong></td>
-                            <td><a href="http://${entry.pfsense_ip}" target="_blank" style="color: #4caf50; text-decoration: none; border-bottom: 1px dashed #4caf50;">${entry.pfsense_ip}</a></td>
-                            <td>${entry.client_ip}</td>
-                            <td colspan="3" style="text-align: center; font-style: italic;">Not logged in</td>
-                        `;
                     } else {
                         const ageClass = getRowClass(entry.timestamp);
                         tr.classList.add(ageClass);
+
+                        if (!entry.logged_in) {
+                            tr.classList.add('status-logged-out');
+                        }
 
                         if (previousTimestamps[entry.team] !== entry.timestamp) {
                             tr.classList.add('highlight');
                             previousTimestamps[entry.team] = entry.timestamp;
                         }
 
+                        const browserContent = entry.logged_in 
+                            ? entry.browser 
+                            : '<span style="font-style: italic; opacity: 0.8;">Not logged in</span>';
+
                         tr.innerHTML = `
                             <td><strong>${entry.team}</strong></td>
-                            <td><a href="http://${entry.pfsense_ip}" target="_blank" style="color: #4caf50; text-decoration: none; border-bottom: 1px dashed #4caf50;">${entry.pfsense_ip}</a></td>
+                            <td><a href="http://${entry.pfsense_ip}" target="_blank" style="color: #2196f3; text-decoration: none; border-bottom: 1px dashed #2196f3;">${entry.pfsense_ip}</a></td>
                             <td>${entry.client_ip}</td>
                             <td style="word-break: break-all; display: flex; justify-content: space-between; align-items: center;">
                                 <span>${entry.session_id}</span>
                                 <button class="copy-btn" onclick="copySession('${entry.session_id}', this)">Copy</button>
                             </td>
-                            <td>${entry.browser}</td>
+                            <td>${browserContent}</td>
                             <td><span class="time-ago" title="${entry.timestamp} UTC">${timeSince(entry.timestamp)}</span></td>
                         `;
                     }

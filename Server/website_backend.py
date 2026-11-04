@@ -7,12 +7,9 @@ def get_latest_team_data(db_path="pfsense_session_IDs.db"):
     cursor = conn.cursor()
     latest_data = []
     
-    # Updated range to support 20 teams (1 through 20)
     for i in range(1, 21):
-        # Maps to your "Team X" format
         table_name = f"Team {i}" 
         try:
-            # Added logged_in to the SELECT query
             query = f"""
                 SELECT pfsense_address, client_address, session_id, browser, timestamp, logged_in
                 FROM '{table_name}' 
@@ -22,30 +19,26 @@ def get_latest_team_data(db_path="pfsense_session_IDs.db"):
             cursor.execute(query)
             row = cursor.fetchone()
             
-            # Check if row exists (passes the data to the frontend regardless of logged_in status)
             if row:
                 latest_data.append({
                     "team": table_name,
-                    "pfsense_ip": row[0],   # Maps pfsense_address to the HTML
-                    "client_ip": row[1],    # Maps client_address to the HTML
+                    "pfsense_ip": row[0],   
+                    "client_ip": row[1],    
                     "session_id": row[2],
                     "browser": row[3],
                     "timestamp": row[4],
                     "logged_in": bool(row[5])
                 })
             else:
-                # Shows as 'No data' only if the team has no entries at all
                 latest_data.append({"team": table_name, "status": "No data"})
                 
         except sqlite3.OperationalError:
-            # Fails gracefully if your script hasn't created this team's table yet
             latest_data.append({"team": table_name, "status": "No data"})
 
     conn.close()
     return latest_data
 
 class MonitorHandler(BaseHTTPRequestHandler):
-    # Suppress default HTTP logging to keep your terminal clean
     def log_message(self, format, *args):
         pass
 
@@ -56,6 +49,22 @@ class MonitorHandler(BaseHTTPRequestHandler):
             self.end_headers()
             data = get_latest_team_data()
             self.wfile.write(json.dumps(data).encode('utf-8'))
+            
+        # --- NEW ROUTE FOR DOWNLOADING DB ---
+        elif self.path == '/api/download_db':
+            try:
+                with open('pfsense_session_IDs.db', 'rb') as f:
+                    self.send_response(200)
+                    self.send_header('Content-Type', 'application/octet-stream')
+                    # This header forces the browser to download the file instead of displaying it
+                    self.send_header('Content-Disposition', 'attachment; filename="pfsense_session_IDs.db"')
+                    self.end_headers()
+                    self.wfile.write(f.read())
+            except FileNotFoundError:
+                self.send_response(404)
+                self.end_headers()
+                self.wfile.write(b"Database file not found.")
+                
         elif self.path == '/':
             self.send_response(200)
             self.send_header('Content-type', 'text/html')
