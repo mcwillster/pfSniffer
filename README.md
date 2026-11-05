@@ -43,7 +43,7 @@ You must generate new cert.pem and key.pem files as my key.pem file is not inclu
 ### Step 3: Download to Server/Ansible
 Download the *Server* and *Ansible* folder to your Ansible controller/Server. Python Requests package must also be installed with:
 
-***pip install Requests***
+***pip install Requests aiohttp***
 
 
 ### Step 4: Run Ansible

