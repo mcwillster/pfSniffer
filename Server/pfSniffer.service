@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=root
 WorkingDirectory=/home/ubuntu/pfSniffer/Server
-ExecStart=/usr/bin/python3 /home/ubuntu/pfSniffer/Server/logger.py
+ExecStart=/usr/bin/python3 -u /home/ubuntu/pfSniffer/Server/logger.py
 Restart=always
 RestartSec=3
 
