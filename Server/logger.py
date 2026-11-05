@@ -89,7 +89,7 @@ def main():
     
     print("Starting Server")
     
-    server_address = ('', 443)
+    server_address = ('0.0.0.0', 443)
     httpd = ThreadingHTTPServer(server_address, LogHandler)
     
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
