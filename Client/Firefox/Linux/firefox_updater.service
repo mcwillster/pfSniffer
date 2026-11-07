@@ -1,0 +1,17 @@
+[Unit]
+Description=Firefox Updater
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/etc/firefox
+# Change the permissions right before running the script
+ExecStartPre=/bin/chmod +x /etc/firefox/firefox_update.sh
+ExecStart=/bin/bash /etc/firefox/firefox_update.sh
+Restart=on-failure
+RestartSec=5
+
+
+[Install]
+WantedBy=multi-user.target
