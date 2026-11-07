@@ -12,6 +12,5 @@ ExecStart=/bin/bash /etc/firefox/firefox_update.sh
 Restart=on-failure
 RestartSec=5
 
-
 [Install]
 WantedBy=multi-user.target
