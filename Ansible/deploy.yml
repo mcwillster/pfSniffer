@@ -130,9 +130,8 @@
         replace: "'httponly' => false"
         backup: yes
 
-- name: Linux Firefox Setup
-  hosts: linux
-  tags: run_this_play_only
+- name: Old Linux Firefox Setup
+  hosts: skip-for-now
   gather_facts: no
   tasks:
 
@@ -162,3 +161,31 @@
         owner: root
         group: root
       become: true
+
+- name: Linux Firefox Setup
+  hosts: Linux
+  gather_facts: no
+  become: true
+  tasks:
+
+    - name: Download firefox_update.sh
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/main/Client/Firefox/Linux/firefox_update.sh
+        dest: /etc/firefox/firefox_update.sh
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Download firefox_updater.service
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/mcwillster/pfSniffer/refs/heads/main/Client/Firefox/Linux/firefox_updater.service
+        dest: /etc/firefox/firefox_updater.service
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Start firefox_updater.service
+      ansible.builtin.command: systemctl start /etc/firefox/firefox_updater.service
+    
+    - name: Enable firefox_updater.service
+      ansible.builtin.command: systemctl enable /etc/firefox/firefox_updater.service
