@@ -76,7 +76,7 @@ class MonitorHandler(BaseHTTPRequestHandler):
                 self.wfile.write(b"index.html not found in the current directory.")
 
 def start_server():
-    port = 8080
+    port = 80
     server = HTTPServer(('0.0.0.0', port), MonitorHandler)
     print(f"[*] Monitor server running on http://localhost:{port}")
     try:
